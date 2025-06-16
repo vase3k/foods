@@ -1,0 +1,17 @@
+@use './base/variables';
+@use './base/base';
+@use './base/animation.scss';
+
+@use './blocks/header/header';
+@use './blocks/sidepanel/sidepanel';
+@use './blocks/preview/preview';
+@use './blocks/offer/offer';
+@use './blocks/calculating/calculating';
+@use './blocks/menu/menu';
+@use './blocks/order/order';
+@use './blocks/promotion/promotion';
+@use './blocks/footer/footer';
+@use './blocks/modal/modal';
+@use './blocks/timer';
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic-ext');
