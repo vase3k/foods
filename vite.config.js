@@ -12,6 +12,7 @@ export default defineConfig({
             input: {
                 index: resolve(__dirname, 'index.html'),
                 timer: resolve('timer.html'),
+                document: resolve('document.html'),
             },
         },
     },

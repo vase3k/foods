@@ -36,14 +36,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //timer
 
-    const deadline = '2025-6-19 23:19:20';
+    const deadline = '2025-6-16 23:19:20';
 
     function getTimeRemaining(endtime) {
-        const t = Date.parse(endtime) - Date.parse(new Date());
-        const days = Math.floor(t / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((t / 1000 / 60) % 60);
-        const seconds = Math.floor((t / 1000) % 60);
+        let days, hours, minutes, seconds;
+        const t = Date.parse(endtime) - Date.now();
+        if (t > 0) {
+            days = Math.floor(t / (1000 * 60 * 60 * 24));
+            hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+            minutes = Math.floor((t / 1000 / 60) % 60);
+            seconds = Math.floor((t / 1000) % 60);
+        } else {
+            days = 0;
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        }
 
         return {
             total: t,
@@ -74,10 +82,7 @@ window.addEventListener('DOMContentLoaded', () => {
             minutesCounter.innerHTML = getZero(t.minutes);
             secondsCounter.innerHTML = getZero(t.seconds);
 
-            if (t.total <= 0) {
-                timer.querySelectorAll('span').forEach((e) => (e.innerHTML = 0));
-                clearInterval(timeInterval);
-            }
+            t.total <= 0 && clearInterval(timeInterval);
         }
     }
     setClock('.timer', deadline);
