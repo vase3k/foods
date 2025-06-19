@@ -1,0 +1,7 @@
+'use strict';
+
+import '/src/sass/style.scss';
+import '/src/js/main.js';
+//import '/src/js/timer.js';
+//import '/src/js/weakMap.js';
+//import '/src/js/document.js';
