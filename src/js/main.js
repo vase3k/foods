@@ -87,6 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     setClock('.timer', deadline);
 
+    //modal
     function modal() {
         const modal = document.querySelector('[data-modalMain]'),
             close = document.querySelector('[data-close]'),
