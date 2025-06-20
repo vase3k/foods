@@ -11,8 +11,6 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: resolve(__dirname, 'index.html'),
-                timer: resolve('timer.html'),
-                document: resolve('document.html'),
             },
         },
     },
