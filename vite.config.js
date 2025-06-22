@@ -6,7 +6,7 @@ import createFoldersPlugin from './src/js/createFolder';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-    //base: '/elements/dist/',
+    base: '/foods/dist/',
     build: {
         rollupOptions: {
             input: {
