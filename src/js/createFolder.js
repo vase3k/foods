@@ -3,8 +3,9 @@ import path from 'path';
 
 export default function createFoldersPlugin(
     folders = [
-        'src/img',
-        'src/sass',
+        'src/img/slider',
+        'src/img/form',
+        'src/img/tabs',
         'src/sass/base',
         'src/sass/blocks',
         'src/sass/libs',
