@@ -1,5 +1,6 @@
 'use strict';
-window.addEventListener('DOMContentLoaded', () => {
+
+window.addEventListener('DOMContentLoaded', async () => {
     //tabs
     const buttons = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
@@ -36,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //timer
 
-    const deadline = '2025-6-21 23:19:20';
+    const deadline = '2025-6-29 23:19:20';
 
     function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
@@ -172,33 +173,48 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    new MenuCard(
-        '/src/img/tabs/vegy.jpg',
-        'vegy',
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        '.menu .container',
-        'menu__item'
-    ).render();
-    new MenuCard(
-        '/src/img/tabs/elite.jpg',
-        'elite',
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        12,
-        '.menu .container',
-        'menu__item'
-    ).render();
-    new MenuCard(
-        '/src/img/tabs/post.jpg',
-        'post',
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        15,
-        '.menu .container',
-        'menu__item'
-    ).render();
+    const getRessource = async (url) => {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        return await res.json();
+    };
+
+    getRessource('http://localhost:3000/menu').then((data) => {
+        data.forEach(({ img, altimg, title, descr, price }) => {
+            new MenuCard(
+                img,
+                altimg,
+                title,
+                descr,
+                price,
+                '.menu .container',
+                'menu__item'
+            ).render();
+        });
+    });
+
+    // getRessource('http://localhost:3000/menu').then((data) => {
+    //     createCard(data);
+    // });
+
+    // function createCard(data) {
+    //     data.forEach(({ img, altimg, title, descr, price }) => {
+    //         const element = document.createElement('div');
+    //         element.classList.add('menu__item');
+    //         element.innerHTML = `
+    //                     <img src=${img} alt=${altimg} />
+    //                     <h3 class="menu__item-subtitle">${title}</h3>
+    //                     <div class="menu__item-descr">${descr}</div>
+    //                     <div class="menu__item-divider"></div>
+    //                     <div class="menu__item-price">
+    //                         <div class="menu__item-cost">Цена:</div>
+    //                         <div class="menu__item-total"><span>${price}</span> $/день</div>
+    //                     </div>
+    //                             `;
+
+    //         document.querySelector('.menu .container').append(element);
+    //     });
+    // }
 
     //send HTTP request
 
@@ -210,10 +226,22 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     forms.forEach((form) => {
-        postData(form);
+        bindPostData(form);
     });
 
-    function postData(form) {
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: data,
+        });
+
+        return await res.json();
+    };
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -226,20 +254,9 @@ window.addEventListener('DOMContentLoaded', () => {
             form.insertAdjacentElement('afterend', statusMessage);
 
             const formData = new FormData(form);
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            const object = {};
-            formData.forEach((value, key) => {
-                object[key] = value;
-            });
-
-            fetch('server.php', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(object),
-            })
-                .then((data) => data.text())
+            postData('http://localhost:3000/requests', json)
                 .then((data) => {
                     console.log(data);
                     showThankModal(messages.success);
