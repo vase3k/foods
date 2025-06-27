@@ -1,5 +1,7 @@
 'use strict';
 
+import axios from 'axios';
+
 window.addEventListener('DOMContentLoaded', async () => {
     //tabs
     const buttons = document.querySelectorAll('.tabheader__item'),
@@ -179,19 +181,35 @@ window.addEventListener('DOMContentLoaded', async () => {
         return await res.json();
     };
 
-    getRessource('http://localhost:3000/menu').then((data) => {
-        data.forEach(({ img, altimg, title, descr, price }) => {
-            new MenuCard(
-                img,
-                altimg,
-                title,
-                descr,
-                price,
-                '.menu .container',
-                'menu__item'
-            ).render();
-        });
-    });
+    // getRessource('http://localhost:3000/menu').then((data) => {
+    //     data.forEach(({ img, altimg, title, descr, price }) => {
+    //         new MenuCard(
+    //             img,
+    //             altimg,
+    //             title,
+    //             descr,
+    //             price,
+    //             '.menu .container',
+    //             'menu__item'
+    //         ).render();
+    //     });
+    // });
+
+    axios
+        .get('http://localhost:3000/menu')
+        .then(({ data }) =>
+            data.forEach(({ img, altimg, title, descr, price }) =>
+                new MenuCard(
+                    img,
+                    altimg,
+                    title,
+                    descr,
+                    price,
+                    '.menu .container',
+                    'menu__item'
+                ).render()
+            )
+        );
 
     // getRessource('http://localhost:3000/menu').then((data) => {
     //     createCard(data);
@@ -289,7 +307,49 @@ window.addEventListener('DOMContentLoaded', async () => {
         }, 5000);
     }
 
-    fetch('http://localhost:3000/menu')
-        .then((data) => data.json())
-        .then((res) => console.log(res));
+    //slider
+    function slider() {
+        const sliderBody = document.querySelector('.offer__slider');
+        const sliderNext = sliderBody.querySelector('.offer__slider-next');
+        const sliderPrev = sliderBody.querySelector('.offer__slider-prev');
+        const sliderCounter = sliderBody.querySelector('#current');
+        const sliderTotal = sliderBody.querySelector('#total');
+        const sliderWrapper = sliderBody.querySelector('.offer__slider-wrapper');
+        const sliders = sliderWrapper.querySelectorAll('.offer__slide');
+        let activeSlider = 0;
+
+        function showSlider(active, animation) {
+            sliders.forEach((e, i) => {
+                e.classList.remove('hide', 'animate__animated', animation);
+                i == active && e.classList.add('animate__animated', animation);
+                i !== active && e.classList.add('hide');
+            });
+            sliderCounter.innerHTML = activeSlider + 1;
+            sliderTotal.innerHTML = sliders.length;
+        }
+
+        showSlider(activeSlider);
+
+        function changeCounter(change) {
+            activeSlider += change;
+            if (activeSlider >= sliders.length) {
+                activeSlider = 0;
+                showSlider(activeSlider);
+            }
+            if (activeSlider < 0) {
+                activeSlider = sliders.length - 1;
+                showSlider(activeSlider);
+            }
+        }
+
+        sliderNext.addEventListener('click', (e) => {
+            e.target && changeCounter(1);
+            showSlider(activeSlider, 'animate__bounceInLeft');
+        });
+
+        sliderPrev.addEventListener('click', (e) => {
+            e.target && changeCounter(-1);
+            showSlider(activeSlider, 'animate__bounceInRight');
+        });
+    }
 });

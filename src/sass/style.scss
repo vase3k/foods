@@ -1,6 +1,7 @@
 @use './base/variables';
 @use './base/base';
 @use './base/animation.scss';
+@use '/node_modules/animate.css/animate.min.css';
 
 @use './blocks/header/header';
 @use './blocks/sidepanel/sidepanel';
