@@ -389,5 +389,63 @@ window.addEventListener('DOMContentLoaded', async () => {
             e.target && plusSlides(1);
         });
     }
-    sliderSimple();
+    function sliderCarousel() {
+        const slides = document.querySelectorAll('.offer__slide'),
+            prev = document.querySelector('.offer__slider-prev'),
+            next = document.querySelector('.offer__slider-next'),
+            total = document.querySelector('#total'),
+            current = document.querySelector('#current'),
+            inner = document.querySelector('.offer__slider-inner');
+
+        let totalSlides = slides.length;
+        const slideStep = (1 / totalSlides) * 100;
+        total.innerHTML = totalSlides < 10 ? '0' + totalSlides : totalSlides;
+        inner.style.width = totalSlides * 100 + '%';
+
+        let slideIndex = 0;
+        let touchStart = 0;
+        let touchEnd = 0;
+
+        changeSlide(slideIndex);
+
+        function changeSlide(n) {
+            inner.style.transform = `translateX(${n}%)`;
+            current.innerHTML = Math.round((slideIndex * -1 * totalSlides) / 100 + 1);
+        }
+
+        function changeCounter(n) {
+            slideIndex += n;
+            slideIndex < slideStep * -totalSlides + slideStep && (slideIndex = 0);
+            slideIndex > 0 && (slideIndex = slideStep * -totalSlides + slideStep);
+        }
+
+        function touchChange() {
+            if (touchStart < touchEnd) {
+                changeCounter(slideStep);
+            } else {
+                changeCounter(-slideStep);
+            }
+        }
+
+        next.addEventListener('click', (e) => {
+            changeCounter(-slideStep);
+            e.target && changeSlide(slideIndex);
+        });
+
+        prev.addEventListener('click', (e) => {
+            changeCounter(slideStep);
+            e.target && changeSlide(slideIndex);
+        });
+
+        inner.addEventListener('touchstart', (e) => {
+            touchStart = e.changedTouches[0].screenX;
+            touchChange();
+            changeSlide(slideIndex);
+        });
+
+        inner.addEventListener('touchend', (e) => {
+            touchEnd = e.changedTouches[0].screenX;
+        });
+    }
+    sliderCarousel();
 });
