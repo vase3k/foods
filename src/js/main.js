@@ -9,11 +9,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         buttonsParent = document.querySelector('.tabheader__items');
 
     function hideTabContent() {
-        tabsContent.forEach((tab) => {
+        tabsContent.forEach(tab => {
             tab.classList.add('hide');
             tab.classList.remove('show', 'fade');
         });
-        buttons.forEach((tab) => {
+        buttons.forEach(tab => {
             tab.classList.remove('tabheader__item_active');
         });
     }
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     hideTabContent();
     showTabContent();
 
-    buttonsParent.addEventListener('click', (event) => {
+    buttonsParent.addEventListener('click', event => {
         const target = event.target;
         if (target && target.classList.contains('tabheader__item')) {
             buttons.forEach((item, i) => {
@@ -120,13 +120,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         clearTimeout(timeout);
     }
 
-    modalTrigger.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', e => {
             e.target && e.target.matches('[data-modal]') && openModal();
         });
     });
 
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener('click', e => {
         if (
             (e.target && e.target.matches('[data-modalMain]')) ||
             e.target.getAttribute('data-close') == ''
@@ -134,7 +134,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             closeModal();
     });
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
         e.code === 'Escape' && modal.classList.contains('show') && closeModal();
     });
 
@@ -175,7 +175,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const getRessource = async (url) => {
+    const getRessource = async url => {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Could not fetch ${url}, status: ${res.status}`);
         return await res.json();
@@ -243,7 +243,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         failure: 'Something went wrong',
     };
 
-    forms.forEach((form) => {
+    forms.forEach(form => {
         bindPostData(form);
     });
 
@@ -260,7 +260,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     };
 
     function bindPostData(form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', e => {
             e.preventDefault();
 
             const statusMessage = document.createElement('img');
@@ -275,7 +275,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
             postData('http://localhost:3000/requests', json)
-                .then((data) => {
+                .then(data => {
                     console.log(data);
                     showThankModal(messages.success);
                     statusMessage.remove();
@@ -342,12 +342,12 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        sliderNext.addEventListener('click', (e) => {
+        sliderNext.addEventListener('click', e => {
             e.target && changeCounter(1);
             showSlider(activeSlider, 'animate__bounceInLeft');
         });
 
-        sliderPrev.addEventListener('click', (e) => {
+        sliderPrev.addEventListener('click', e => {
             e.target && changeCounter(-1);
             showSlider(activeSlider, 'animate__bounceInRight');
         });
@@ -371,7 +371,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         function showSlides(n) {
             if (n > slides.length) slideIndex = 1;
             if (n < 1) slideIndex = slides.length;
-            slides.forEach((e) => {
+            slides.forEach(e => {
                 e.classList.add('hide');
             });
             slides[slideIndex - 1].classList.remove('hide');
@@ -382,14 +382,14 @@ window.addEventListener('DOMContentLoaded', async () => {
             showSlides((slideIndex += n));
         }
 
-        prev.addEventListener('click', (e) => {
+        prev.addEventListener('click', e => {
             e.target && plusSlides(-1);
         });
-        next.addEventListener('click', (e) => {
+        next.addEventListener('click', e => {
             e.target && plusSlides(1);
         });
     }
-    function sliderCarousel() {
+    function sliderCarouselByMe() {
         const slides = document.querySelectorAll('.offer__slide'),
             prev = document.querySelector('.offer__slider-prev'),
             next = document.querySelector('.offer__slider-next'),
@@ -427,24 +427,86 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        next.addEventListener('click', (e) => {
+        next.addEventListener('click', e => {
             changeCounter(-slideStep);
             e.target && changeSlide(slideIndex);
         });
 
-        prev.addEventListener('click', (e) => {
+        prev.addEventListener('click', e => {
             changeCounter(slideStep);
             e.target && changeSlide(slideIndex);
         });
 
-        inner.addEventListener('touchstart', (e) => {
+        inner.addEventListener('touchstart', e => {
             touchStart = e.changedTouches[0].screenX;
             touchChange();
             changeSlide(slideIndex);
         });
 
-        inner.addEventListener('touchend', (e) => {
+        inner.addEventListener('touchend', e => {
             touchEnd = e.changedTouches[0].screenX;
+        });
+    }
+    function sliderCarousel() {
+        const slides = document.querySelectorAll('.offer__slide'),
+            prev = document.querySelector('.offer__slider-prev'),
+            next = document.querySelector('.offer__slider-next'),
+            total = document.querySelector('#total'),
+            current = document.querySelector('#current'),
+            slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+            slidesField = document.querySelector('.offer__slider-inner'),
+            width = window.getComputedStyle(slidesWrapper).width;
+
+        let slideIndex = 1;
+        let offset = 0;
+
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+            current.textContent = `0${slideIndex}`;
+        } else {
+            total.textContent = slides.length;
+            current.textContent = slideIndex;
+        }
+
+        slidesField.style.width = 100 * slides.length + '%';
+        slides.forEach(slide => (slide.style.width = width));
+
+        next.addEventListener('click', () => {
+            offset >= parseInt(width) * (slides.length - 1)
+                ? (offset = 0)
+                : (offset += parseInt(width));
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            if (slideIndex >= slides.length) {
+                slideIndex = 1;
+            } else {
+                slideIndex++;
+            }
+
+            if (slides.length < 10) {
+                current.textContent = `0${slideIndex}`;
+            } else {
+                current.textContent = slideIndex;
+            }
+        });
+
+        prev.addEventListener('click', () => {
+            offset <= 0
+                ? (offset = parseInt(width) * (slides.length - 1))
+                : (offset -= parseInt(width));
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            if (slideIndex <= 1) {
+                slideIndex = slides.length;
+            } else {
+                slideIndex--;
+            }
+
+            if (slides.length < 10) {
+                current.textContent = `0${slideIndex}`;
+            } else {
+                current.textContent = slideIndex;
+            }
         });
     }
     sliderCarousel();
