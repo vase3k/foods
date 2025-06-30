@@ -449,13 +449,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     function sliderCarousel() {
         const slides = document.querySelectorAll('.offer__slide'),
+            slider = document.querySelector('.offer__slider'),
             prev = document.querySelector('.offer__slider-prev'),
             next = document.querySelector('.offer__slider-next'),
             total = document.querySelector('#total'),
             current = document.querySelector('#current'),
             slidesWrapper = document.querySelector('.offer__slider-wrapper'),
             slidesField = document.querySelector('.offer__slider-inner'),
-            width = window.getComputedStyle(slidesWrapper).width;
+            width = parseInt(window.getComputedStyle(slidesWrapper).width);
 
         let slideIndex = 1;
         let offset = 0;
@@ -472,9 +473,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         slides.forEach(slide => (slide.style.width = width));
 
         next.addEventListener('click', () => {
-            offset >= parseInt(width) * (slides.length - 1)
-                ? (offset = 0)
-                : (offset += parseInt(width));
+            offset >= width * (slides.length - 1) ? (offset = 0) : (offset += width);
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             if (slideIndex >= slides.length) {
@@ -490,15 +489,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
 
             dots.forEach((dot, i) => {
-                dot.classList.remove('offer__slider-nav_active');
-                if (i == slideIndex - 1) dot.classList.add('offer__slider-nav_active');
+                dot.classList.remove('offer__slider-dot_active');
+                if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
             });
         });
 
         prev.addEventListener('click', () => {
-            offset <= 0
-                ? (offset = parseInt(width) * (slides.length - 1))
-                : (offset -= parseInt(width));
+            offset <= 0 ? (offset = width * (slides.length - 1)) : (offset -= width);
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             if (slideIndex <= 1) {
@@ -514,29 +511,31 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
 
             dots.forEach((dot, i) => {
-                dot.classList.remove('offer__slider-nav_active');
-                if (i == slideIndex - 1) dot.classList.add('offer__slider-nav_active');
+                dot.classList.remove('offer__slider-dot_active');
+                if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
             });
         });
 
         const navWrapper = document.querySelector('.offer__slider-nav');
 
-        slides.forEach(() => {
+        slides.forEach((e, i) => {
             const dot = document.createElement('div');
             dot.classList.add('offer__slider-dot');
+            dot.setAttribute('data-slide-to', i + 1);
             navWrapper.append(dot);
         });
 
         const dots = document.querySelectorAll('.offer__slider-dot');
         dots.forEach((dot, i) => {
+            if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
             dot.addEventListener('click', e => {
                 e.target && e.target.matches('div') && (slideIndex = i + 1);
                 current.innerHTML = slideIndex < 10 ? `0${slideIndex}` : slideIndex;
-                offset = parseInt(width) * i;
+                offset = width * i;
                 slidesField.style.transform = `translateX(-${offset}px)`;
-                dots.forEach(dot => dot.classList.remove('offer__slider-nav_active'));
+                dots.forEach(dot => dot.classList.remove('offer__slider-dot_active'));
                 if (e.target == dot) {
-                    dot.classList.add('offer__slider-nav_active');
+                    dot.classList.add('offer__slider-dot_active');
                 }
             });
         });

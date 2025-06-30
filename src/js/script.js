@@ -8,3 +8,5 @@ import '/src/js/main.js';
 //import '/src/js/mutation.js';
 //import '/src/js/this.js';
 //import '/src/js/class.js';
+//import '/src/js/localStorage.js';
+//import '/src/js/regular.js';
