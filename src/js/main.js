@@ -592,11 +592,33 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     function calculator() {
         const res = document.querySelector('.calculating__result span');
-        let sex = 'female',
-            height,
-            weight,
-            age,
-            ratio = 1.375;
+        let sex, height, weight, age, ratio;
+
+        if (localStorage.getItem('sex')) {
+            sex = localStorage.getItem('sex');
+        } else {
+            sex = 'female';
+            localStorage.setItem('sex', 'female');
+        }
+        if (localStorage.getItem('ratio')) {
+            ratio = localStorage.getItem('ratio', '1.375');
+        } else {
+            ratio = '1.375';
+            localStorage.setItem('ratio', '1.375');
+        }
+
+        function initLocalSetting(selector, activeClass) {
+            const elements = document.querySelectorAll(selector);
+
+            elements.forEach(element => {
+                element.classList.remove(activeClass);
+                element.id === sex && element.classList.add(activeClass);
+                element.getAttribute('data-ratio') === ratio && element.classList.add(activeClass);
+            });
+        }
+
+        initLocalSetting('#gender div', 'calculating__choose-item_active');
+        initLocalSetting('.calculating__choose_big div', 'calculating__choose-item_active');
 
         function calcTotal() {
             if (!sex || !height || !weight || !age || !ratio) {
@@ -615,14 +637,26 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        function getStaticInformation(parentSelector, activeClass) {
-            const elements = document.querySelectorAll(`${parentSelector} div`);
+        function getStaticInformation(selector, activeClass) {
+            const elements = document.querySelectorAll(selector);
             elements.forEach(item => {
+                // if (item.id === localStorage.getItem('sex')) {
+                //     sex = localStorage.getItem('sex');
+                //     elements.forEach(e => e.classList.remove(activeClass));
+                //     item.classList.add(activeClass);
+                // }
+                // if (item.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                //     ratio = localStorage.getItem('ratio');
+                //     elements.forEach(e => e.classList.remove(activeClass));
+                //     item.classList.add(activeClass);
+                // }
                 item.addEventListener('click', e => {
                     if (e.target.getAttribute('data-ratio')) {
                         ratio = +e.target.getAttribute('data-ratio');
+                        localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
                     } else {
                         sex = e.target.getAttribute('id');
+                        localStorage.setItem('sex', e.target.getAttribute('id'));
                     }
 
                     elements.forEach(e => e.classList.remove(activeClass));
@@ -648,6 +682,12 @@ window.addEventListener('DOMContentLoaded', async () => {
                         age = +input.value;
                         break;
                 }
+                if (input.value.match(/\D/gi)) {
+                    input.style.outline = 'solid red medium';
+                } else {
+                    input.style.outline = '';
+                    input.removeAttribute('style');
+                }
                 calcTotal();
             });
         }
@@ -656,8 +696,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         getDinamicInformation('#weight');
         getDinamicInformation('#age');
 
-        getStaticInformation('#gender', 'calculating__choose-item_active');
-        getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+        getStaticInformation('#gender div', 'calculating__choose-item_active');
+        getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
 
         calcTotal();
     }
