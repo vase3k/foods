@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     //timer
 
-    const deadline = '2025-6-29 23:19:20';
+    const deadline = '2025-7-10 23:19:20';
 
     function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
@@ -541,4 +541,53 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
     sliderCarousel();
+
+    function calculator() {
+        const calculator = document.querySelector('.calculating .calculating__field'),
+            gender = calculator.querySelectorAll('#gender div'),
+            activity = calculator.querySelectorAll('.calculating__choose_big div'),
+            constitution = calculator.querySelectorAll('input'),
+            result = calculator.querySelector('.calculating__result span');
+
+        let man = true;
+        let activityIndex = 'low';
+        let height = 183;
+        let weight = 73;
+        let age = 37;
+
+        const activityBase = { low: 1.2, small: 1.375, medium: 1.55, high: 1.725 };
+
+        function classHightlight(block) {
+            block.forEach(item => {
+                item.addEventListener('click', e => {
+                    block.forEach(item => item.classList.remove('calculating__choose-item_active'));
+                    e.target && e.target.classList.add('calculating__choose-item_active');
+                    e.target.innerHTML === 'Мужчина' ? (man = true) : (man = false);
+                    e.srcElement.id && (activityIndex = e.srcElement.id);
+                    result.innerHTML = calcCalories();
+                });
+            });
+        }
+
+        classHightlight(gender);
+        classHightlight(activity);
+
+        constitution.forEach(input =>
+            input.addEventListener('change', e => {
+                e.target.id === 'height' && (height = e.target.value);
+                e.target.id === 'weight' && (weight = e.target.value);
+                e.target.id === 'age' && (age = e.target.value);
+                result.innerHTML = calcCalories();
+            })
+        );
+
+        function calcCalories() {
+            return (
+                man
+                    ? (13.4 * weight + 4.8 * height + 5.7 * age) * activityBase[activityIndex]
+                    : (9.2 * weight + 3.1 * height + 4.3 * age) * activityBase[activityIndex]
+            ).toFixed();
+        }
+    }
+    calculator();
 });
