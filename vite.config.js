@@ -13,6 +13,9 @@ export default defineConfig({
                 index: resolve(__dirname, 'index.html'),
             },
         },
+        modulePreload: true,
+        target: 'esnext',
     },
+
     plugins: [createFoldersPlugin()],
 });
