@@ -26,15 +26,6 @@
     }
   ],
   "requests": [
-    {
-      "id": "f009",
-      "name": "Vasiliy",
-      "phone": "+375255484274"
-    },
-    {
-      "id": "5ca5",
-      "name": "Vasiliy",
-      "phone": "+375255484274"
-    }
+
   ]
 }
