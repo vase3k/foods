@@ -7,7 +7,7 @@ import path from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-    //base: '/foods/dist/',
+    base: '/foods/dist/',
     build: {
         rollupOptions: {
             input: {
