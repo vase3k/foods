@@ -34,6 +34,7 @@ function createFoldersPlugin(
         'src/font',
         'src/js',
         'src/js/modules',
+        'src/js/services',
         'src/logo',
         'src/icons',
     ]

@@ -1,6 +1,6 @@
 'use strict';
 
-export default function slider() {
+export default function slider(data) {
     function sliderByMe() {
         const sliderBody = document.querySelector('.offer__slider');
         const sliderNext = sliderBody.querySelector('.offer__slider-next');
@@ -140,15 +140,23 @@ export default function slider() {
             touchEnd = e.changedTouches[0].screenX;
         });
     }
-    function sliderCarousel() {
-        const slides = document.querySelectorAll('.offer__slide'),
-            slider = document.querySelector('.offer__slider'),
-            prev = document.querySelector('.offer__slider-prev'),
-            next = document.querySelector('.offer__slider-next'),
-            total = document.querySelector('#total'),
-            current = document.querySelector('#current'),
-            slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-            slidesField = document.querySelector('.offer__slider-inner'),
+    function sliderCarousel({
+        slidesSelector,
+        prevSelector,
+        nextSelector,
+        totalSelector,
+        currentSelector,
+        slidesWrapperSelector,
+        slidesFieldSelector,
+        activeClass,
+    }) {
+        const slides = document.querySelectorAll(slidesSelector),
+            prev = document.querySelector(prevSelector),
+            next = document.querySelector(nextSelector),
+            total = document.querySelector(totalSelector),
+            current = document.querySelector(currentSelector),
+            slidesWrapper = document.querySelector(slidesWrapperSelector),
+            slidesField = document.querySelector(slidesFieldSelector),
             width = parseInt(window.getComputedStyle(slidesWrapper).width);
 
         let slideIndex = 1;
@@ -182,8 +190,8 @@ export default function slider() {
             }
 
             dots.forEach((dot, i) => {
-                dot.classList.remove('offer__slider-dot_active');
-                if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
+                dot.classList.remove(activeClass);
+                if (i == slideIndex - 1) dot.classList.add(activeClass);
             });
         });
 
@@ -204,8 +212,8 @@ export default function slider() {
             }
 
             dots.forEach((dot, i) => {
-                dot.classList.remove('offer__slider-dot_active');
-                if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
+                dot.classList.remove(activeClass);
+                if (i == slideIndex - 1) dot.classList.add(activeClass);
             });
         });
 
@@ -220,18 +228,18 @@ export default function slider() {
 
         const dots = document.querySelectorAll('.offer__slider-dot');
         dots.forEach((dot, i) => {
-            if (i == slideIndex - 1) dot.classList.add('offer__slider-dot_active');
+            if (i == slideIndex - 1) dot.classList.add(activeClass);
             dot.addEventListener('click', e => {
                 e.target && e.target.matches('div') && (slideIndex = i + 1);
                 current.innerHTML = slideIndex < 10 ? `0${slideIndex}` : slideIndex;
                 offset = width * i;
                 slidesField.style.transform = `translateX(-${offset}px)`;
-                dots.forEach(dot => dot.classList.remove('offer__slider-dot_active'));
+                dots.forEach(dot => dot.classList.remove(activeClass));
                 if (e.target == dot) {
-                    dot.classList.add('offer__slider-dot_active');
+                    dot.classList.add(activeClass);
                 }
             });
         });
     }
-    sliderCarousel();
+    sliderCarousel(data);
 }

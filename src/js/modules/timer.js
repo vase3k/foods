@@ -1,8 +1,6 @@
 'use strict';
 
-export default function timer() {
-    const deadline = '2025-7-10 23:19:20';
-
+export default function timer(id, deadline) {
     function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
         const t = Date.parse(endtime) - Date.now();
@@ -50,5 +48,5 @@ export default function timer() {
             t.total <= 0 && clearInterval(timeInterval);
         }
     }
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }
