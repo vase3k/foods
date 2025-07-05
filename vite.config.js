@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import viteImagemin from 'vite-plugin-imagemin';
+import babel from '@rollup/plugin-babel';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -47,6 +48,9 @@ export default defineConfig({
                     },
                 ],
             },
+        }),
+        babel({
+            babelHelpers: 'bundled',
         }),
     ],
 });
