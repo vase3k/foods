@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import viteImagemin from 'vite-plugin-imagemin';
-import babel from '@rollup/plugin-babel';
+import legacy from '@vitejs/plugin-legacy';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -17,7 +17,7 @@ export default defineConfig({
             },
         },
         modulePreload: true,
-        target: 'esnext',
+        //target: 'esnext',
     },
 
     plugins: [
@@ -49,8 +49,8 @@ export default defineConfig({
                 ],
             },
         }),
-        babel({
-            babelHelpers: 'bundled',
+        legacy({
+            targets: ['> 0.2%', 'last 2 versions', 'Firefox ESR'],
         }),
     ],
 });

@@ -11,3 +11,5 @@ const persone = {
         console.log(this.name);
     },
 };
+
+console.log(persone);

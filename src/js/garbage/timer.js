@@ -13,27 +13,8 @@
 
 // clearTimeout(timerId);
 
-const btn = document.querySelector('.btn');
 // let timerIdInterval,
 //     i = 0;
-
-function myAnimation() {
-    const elem = document.querySelector('.box');
-    let pos = 0;
-
-    const id = setInterval(frame, 10);
-    function frame() {
-        if (pos == 295) {
-            clearInterval(id);
-        } else {
-            pos++;
-            elem.style.top = pos + 'px';
-            elem.style.left = pos + 'px';
-        }
-    }
-}
-
-btn.addEventListener('click', myAnimation);
 
 // btn.addEventListener('click', () => {
 //     timerIdInterval = setInterval(logger, 500, 'setInterval');
@@ -51,3 +32,47 @@ btn.addEventListener('click', myAnimation);
 //     console.log('hello');
 //     id = setTimeout(log, 500);
 // }, 500);
+
+const elem = document.querySelector('.box');
+const btn = document.querySelector('.btn');
+let pos = 0;
+function myAnimation() {
+    pos++;
+    elem.style.top = pos + 'px';
+    elem.style.left = pos + 'px';
+
+    if (pos < 300) {
+        requestAnimationFrame(myAnimation);
+    }
+}
+
+btn.addEventListener('click', myAnimation);
+
+let id = requestAnimationFrame(myAnimation);
+cancelAnimationFrame(id);
+
+const btnPhone = document.querySelector('#animateIphone'),
+    iphoneImg = document.querySelector('.iphone');
+
+let animateIphone;
+
+btnPhone.addEventListener('click', () => {
+    if (!animateIphone) {
+        animateIphone = iphoneImg.animate(
+            [
+                { transform: 'translateX(0) rotate(0deg)', filter: 'opacity(100%)' },
+                { scale: '1.2' },
+                { transform: 'translateX(300px) rotate(180deg)' },
+                { transform: 'translateX(150px)', filter: 'opacity(50%)' },
+            ],
+            {
+                duration: 2000,
+                iterations: 2,
+            }
+        );
+    } else if (animateIphone.playState === 'paused') {
+        animateIphone.play();
+    } else {
+        animateIphone.pause();
+    }
+});
