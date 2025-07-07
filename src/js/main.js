@@ -12,7 +12,7 @@ import { openModal } from './modules/modal';
 window.addEventListener('DOMContentLoaded', async () => {
     const timeout = setTimeout(openModal, 4000000, '[data-modalMain]');
     tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
-    timer('.timer', '2025-7-10 23:19:20');
+    timer('.timer', '2025-7-07 22:35:00');
     cards();
     modal('[data-modal]', '[data-modalMain]', timeout);
     form('[data-modalMain]', timeout);

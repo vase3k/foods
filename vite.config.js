@@ -49,9 +49,9 @@ export default defineConfig({
                 ],
             },
         }),
-        legacy({
-            targets: ['> 0.2%', 'last 2 versions', 'Firefox ESR'],
-        }),
+        // legacy({
+        //     targets: ['defaults'],
+        // }),
     ],
 });
 
